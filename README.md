@@ -32,6 +32,7 @@ Clean and consistent UI using Tailwind CSS
 In-memory data handling for demo purposes
 
 📂 Folder Structure
+'''
 interntrack/
 ├── src/
 │   ├── app/
@@ -75,6 +76,8 @@ interntrack/
 ├── package.json
 ├── next.config.mjs
 └── README.md
+
+'''
 
 🔗 API Details
 All backend functionality is implemented using Next.js API Routes.
@@ -135,3 +138,4 @@ Reusable dashboard layout for both intern and admin roles
 
 Intern Track demonstrates a clean, modular, and API-driven approach to building a role-based dashboard system using Next.js.
 The project fulfills all core requirements while maintaining clarity, scalability, and ease of future enhancement.
+
