@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   LayoutDashboard,
   PenTool,
@@ -14,7 +15,13 @@ export default function Sidebar({ role }) {
     <aside className="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col h-full">
       <div className="p-6 border-b border-slate-100">
         <div className="flex items-center gap-2 text-indigo-600 font-bold text-xl">
-          <LayoutDashboard className="w-6 h-6" />
+          <Image
+            src="/logo.png"
+            alt="InternTrack Logo"
+            width={32}
+            height={32}
+            className="w-8 h-8 rounded-md"
+          />
           InternTrack
         </div>
       </div>
