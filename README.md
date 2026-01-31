@@ -1,40 +1,35 @@
 📘 Intern Track
 
 Intern Track is a web-based intern management system built using Next.js App Router, React, Tailwind CSS, and Next.js API Routes.
-It enables interns to mark attendance and submit daily activity logs, while admins can monitor intern records through a centralized dashboard.
+
+It allows interns to mark attendance and submit daily activity logs, while administrators can monitor intern records through a centralized dashboard.
+
+🚀 Tech Stack
+Frontend: Next.js (App Router), React
+Styling: Tailwind CSS
+Backend: Next.js API Routes
+State Handling: In-memory storage (session-based)
 
 ✅ Features Implemented
-👨‍🎓 Intern Module
 
+👨🎓 Intern Module
 Mark daily attendance (restricted to once per day)
-
-Submit daily activity log with:
-
+Submit daily activity logs including:
 Tasks worked on
-
 Hours spent
-
 Optional blockers
-
 View personal activity history
 
-👨‍💼 Admin Module
-
+👨💼 Admin Module
 View list of all interns
-
-View attendance records of interns
-
+View attendance records
 Review all activity logs submitted by interns
 
 🧩 General Features
-
 Dashboard-based UI with role-specific pages
-
-REST-style API integration using Next.js API Routes
-
+REST-style API integration
 Clean and consistent UI using Tailwind CSS
-
-In-memory data handling for session-based operation
+In-memory data handling for demo purposes
 
 📂 Folder Structure
 interntrack/
@@ -82,22 +77,17 @@ interntrack/
 └── README.md
 
 🔗 API Details
-
 All backend functionality is implemented using Next.js API Routes.
 
 📌 Attendance API
 
 GET /api/attendance
-
 Fetches all attendance records
 
 POST /api/attendance
-
 Marks attendance for an intern
 
 Restriction: Attendance can be marked only once per intern per day
-
-Request Body
 
 {
   "internId": "1",
@@ -107,16 +97,12 @@ Request Body
 📌 Activity API
 
 GET /api/activity
-
 Fetches all submitted activity logs
 
 POST /api/activity
-
 Submits daily activity log
 
 Restriction: Only one activity log per intern per day
-
-Request Body
 
 {
   "internId": "1",
@@ -129,32 +115,21 @@ Request Body
 📌 Intern API
 
 GET /api/interns
-
-Fetches list of interns
+Fetches the list of interns
 
 ⚠️ Assumptions Made
-
 Authentication is simulated (no real login system)
-
-Intern identity is hardcoded for demonstration purposes
-
+Intern identity is hardcoded for demonstration
 Data is stored in-memory and resets on server restart
-
-Only basic validation is implemented as per requirements
-
+Only basic validation is implemented
 Mobile-first optimization is not mandatory
-
-No database integration was required
+No database integration is used
 
 🧠 Design & Architectural Decisions
-
 Used Next.js App Router for modular routing
-
-APIs separated from UI logic for clean architecture
-
-Tailwind CSS used with global base styling to minimize repetitive classes
-
-Dashboard layout reused across intern and admin pages
+API logic separated from UI for clean architecture
+Tailwind CSS with global base styling to reduce repetition
+Reusable dashboard layout for both intern and admin roles
 
 🚀 Conclusion
 
