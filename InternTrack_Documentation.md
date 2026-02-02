@@ -2,45 +2,45 @@
 
 ## 1. Project Overview
 
-**Intern Track** is a comprehensive web-based management system designed to streamline the tracking of intern activities and attendance. In many organizations, tracking intern progress is a manual process involving spreadsheets or scattered messages. Intern Track solves this by providing a unified digital interface for daily logging and administrative oversight.
+**Intern Track** is a comprehensive web-based management system designed to streamline the tracking of intern activities and attendance. Intern Track provides a unified digital interface for daily logging and administrative oversight, replacing manual spreadsheets and scattered messages.
 
 **Key Objectives:**
 *   **For Interns:** Provide a simple, intuitive interface to mark attendance and log daily work activities.
-*   **For Admins:** enable centralized monitoring of all interns' status, attendance history, and work logs.
-*   **Simplicity:** Eliminate complex authentication or database setup requirements for evaluation purposes, focusing on the core functional logic and UI/UX.
+*   **For Admins:** Enable centralized monitoring of all interns' status, attendance history, and work logs.
+*   **Scalability:** Built with a production-ready database layer, allowing for reliable data persistence and history tracking.
 
 ---
 
 ## 2. System Architecture
 
-The application is built using a modern **client-server architecture** within the Next.js framework.
+The application is built using a modern **client-server architecture** within the Next.js framework, leveraging Server-Side Rendering (SSR) and API routes.
 
 ### High-Level Architecture
 *   **Frontend (Client):** React components (Next.js App Router) that render the UI and handle user interactions.
-*   **Backend (API Layer):** Next.js API Routes (`src/app/api/*`) serve as the backend, handling data requests and mock business logic.
-*   **Data Layer:** An in-memory data store (`src/lib/data.js`) acts as the database for the session.
+*   **Backend (API Layer):** Next.js API Routes (`src/app/api/*`) serve as the RESTful backend, handling data processing and database interactions.
+*   **Data Layer:** **PostgreSQL** database accessed via **Prisma ORM**, providing robust data persistence, schema validation, and type safety.
 
 ### Data Flow
 1.  **User Action:** An intern submits a form (e.g., Activity Log).
 2.  **API Call:** The client sends a `POST` request to `/api/activity`.
-3.  **Processing:** The API route receives the data, validates it, and updates the in-memory arrays.
-4.  **Response:** The API returns a success message or error, which the client displays to the user.
+3.  **Processing:** The API route receives the data and uses the Prisma Client to interact with the database.
+4.  **Persistence:** Data is securely stored in the PostgreSQL database.
+5.  **Response:** The API returns a success message or error to the client.
 
 ---
 
 ## 3. Technology Stack
 
 ### Frontend
-*   **Next.js (App Router):** Chosen for its robust routing, server-side rendering capabilities, and seamless API integration.
+*   **Next.js (App Router):** Utilizes the latest Next.js features like Server Components and API Routes.
 *   **React:** Used for building interactive, component-based user interfaces.
-*   **Tailwind CSS:** A utility-first CSS framework used for rapid, consistent, and maintainable styling without writing custom CSS files.
+*   **Tailwind CSS:** A utility-first CSS framework for rapid, consistent, and maintainable styling.
+*   **Lucide React:** Icon library for consistent UI iconography.
 
-### Backend
-*   **Next.js API Routes:** Provides a serverless-like backend environment within the same project, simplifying deployment and development.
-
-### Styling Strategy
-*   **Global Styles (`globals.css`):** Utilizing Tailwind's `@layer base` to standardize HTML elements (`h1`, `input`, `table`), reducing class duplication in components.
-*   **Zero-Config Components:** Components like `Card` and `DashboardLayout` are designed to be minimal and reusable, relying on the central theme.
+### Backend & Database
+*   **Next.js API Routes:** Serverless-comptaible backend functions.
+*   **Prisma ORM:** Modern Object-Relational Mapping tool for Type-safe database access.
+*   **PostgreSQL:** Relational database management system for structured data storage.
 
 ---
 
@@ -50,41 +50,41 @@ The application is built using a modern **client-server architecture** within th
 1.  **Dashboard Access:** The intern accesses the "Intern Dashboard" (`/intern`).
 2.  **Mark Attendance:**
     *   Navigate to "Mark Attendance".
-    *   Click "Present" to log attendance for the day.
-    *   Getting instant feedback on success.
+    *   Click "Present" to log attendance.
+    *   The system checks for duplicate entries for the current day.
 3.  **Log Activity:**
     *   Navigate to "Activity Log".
     *   Enter tasks worked on, hours spent, and any blockers.
-    *   Submit the form. (Validations ensure hours > 0 and tasks are not empty).
+    *   Submit the form.
 
 ### Admin Workflow
 1.  **Overview:** The admin accesses the "Admin Dashboard" (`/admin`) to see a summary of all interns.
 2.  **Review Activities:**
     *   Navigate to "Activity Logs".
-    *   View a table of all submitted activities, sorted by date strings or order of submission.
+    *   View a table of all submitted activities, sorted by date.
 3.  **Check Attendance:**
     *   Navigate to "Attendance Records".
-    *   View a master list of who was present on which date.
+    *   View a master list of daily attendance.
 
 ---
 
 ## 5. Features Description
 
 ### Attendance Management
-Allows interns to mark themselves as "Present". The system prevents duplicate entries for the same intern on the same day.
+Allows interns to mark themselves as "Present". The backend enforces a uniqueness constraint on the `[internId, date]` pair to prevent duplicate attendance logs.
 
 ### Activity Logging
 A structured form for interns to document their daily work.
 *   **Fields:** Date (Auto-filled), Tasks, Hours, Blockers.
-*   **Validation:** Prevents submission of empty tasks or invalid hours.
+*   **Storage:** Saved to the `Activity` table in the database.
 
 ### Admin Panels
-*   **Intern List:** Displays name, email, and department.
-*   **Activity History:** A tabular view of what every intern has been working on.
-*   **Attendance History:** A historical record of presence.
+*   **Intern List:** Displays name and email of all registered interns.
+*   **Activity History:** A tabular view of daily work logs from all interns.
+*   **Attendance History:** A historical record of presence for all interns.
 
-### Role-Based UI (Simulated)
-The application simulates two distinct layouts/menus based on the `role` prop passed to the `DashboardLayout`, showing only relevant links (e.g., Interns don't see "Intern List").
+### Seeding Mechanism
+A dedicated API endpoint (`/api/seed`) exists to populate the database with initial intern data for testing/demo purposes.
 
 ---
 
@@ -92,67 +92,88 @@ The application simulates two distinct layouts/menus based on the `role` prop pa
 
 ### 1. Interns
 *   **GET /api/interns**
-    *   **Purpose:** Fetch list of all registered interns.
-    *   **Response:** JSON array of intern objects `{ id, name, email, department }`.
+    *   **Purpose:** Fetch list of all registered interns from the database.
+    *   **Response:** JSON array of intern objects.
 
 ### 2. Attendance
 *   **GET /api/attendance**
     *   **Purpose:** Fetch all attendance records.
-    *   **Response:** JSON array of entries `{ id, internId, date, status }`.
 *   **POST /api/attendance**
     *   **Purpose:** Mark an intern as present.
     *   **Request:** `{ internId, date, status }`.
-    *   **Logic:** Checks if a record already exists for this intern/date to prevent duplicates.
+    *   **Logic:** Uses `prisma.attendance.create` with constraints to ensure one record per intern per day.
 
 ### 3. Activity
 *   **GET /api/activity**
-    *   **Purpose:** Fetch all submitted activity logs.
-    *   **Response:** JSON array of logs `{ id, internId, tasks, hours, date }`.
+    *   **Purpose:** Fetch all activity logs, ordered by date descending.
 *   **POST /api/activity**
     *   **Purpose:** Submit a new daily log.
     *   **Request:** `{ internId, tasks, hours, blockers, date }`.
-    *   **Logic:** Validates input fields before saving.
+
+### 4. Admin / System
+*   **GET /api/seed**
+    *   **Purpose:** Seeds the `Intern` table with initial data (e.g., "Intern 1").
+    *   **Use Case:** Run this once after setting up the database to ensure there is a user to test with.
 
 ---
 
-## 7. UI & Styling Strategy
+## 7. Data Handling & Schema
 
-The project adopts a **"Semantic & Minimalist"** styling strategy.
+The project uses a **PostgreSQL** database defined by the following Prisma schema:
 
-*   **Global Standardization:** Instead of `className="text-2xl font-bold"` on every header, `h1` is styled globally in `globals.css`.
-*   **Semantic HTML:** Pages use standard `<label>`, `<input>`, `<table>` tags which automatically inherit premium styles from the base layer.
-*   **Utility Abstraction:** A single `.ui-card` utility manages all containers, ensuring consistent borders, shadows, and padding across the app.
-*   **Palette:** Uses `Slate` (neutrals) for structure and `Indigo` for actions/focus states, providing a clean, "Dashboard SaaS" aesthetic.
+### Models
+*   **Intern:** `id`, `name`, `email`
+*   **Attendance:** `id`, `internId`, `date`, `status`
+*   **Activity:** `id`, `internId`, `date`, `tasks`, `hours`, `blockers`
 
----
-
-## 8. Data Handling
-
-**In-Memory Storage:**
-Data is stored in JavaScript arrays exported from `src/lib/data.js`. Use of `let` allows these arrays to be modified during the runtime of the server application.
-
-*   **Reason:** This approach removes the complexity of setting up a SQL/NoSQL database for a prototype/demo application, allowing immediate "plug-and-play" evaluation.
-*   **Behavior:** Data persists as long as the Next.js development server is running. Restarting the server resets data to the initial state.
+### Relationships
+*   `Intern` has a one-to-many relationship with both `Attendance` and `Activity` records.
 
 ---
 
-## 9. Limitations
+## 8. Project Setup & Installation
 
-1.  **Persistence:** Since data is in-memory, all new entries are lost upon server restart.
-2.  **Authentication:** There is no real login system (JWT/Session). Users typically "enter" as a specific role by visiting the URL directly.
-3.  **Concurrency:** In-memory arrays are not thread-safe for high-scale production use, though perfectly adequate for this single-user demo.
+Since the project uses a database, additional setup steps are required compared to a static site.
+
+### Prerequisites
+*   Node.js & npm
+*   PostgreSQL Service (Local or Cloud like Neon/Supabase)
+
+### Setup Steps
+1.  **Install Dependencies:**
+    ```bash
+    npm install
+    ```
+2.  **Configure Environment:**
+    *   Create a `.env` file in the root directory.
+    *   Add your database connection string:
+        ```
+        DATABASE_URL="postgresql://user:password@localhost:5432/interntrack_db?schema=public"
+        ```
+3.  **Initialize Database:**
+    ```bash
+    npx prisma generate
+    npx prisma db push
+    ```
+    *(Note: `prisma db push` syncs the schema with the database without creating migrations, ideal for prototyping).*
+4.  **Seed Data:**
+    *   Start the server: `npm run dev`
+    *   Visit `http://localhost:3000/api/seed` in your browser to create the initial intern.
+5.  **Run Application:**
+    ```bash
+    npm run dev
+    ```
 
 ---
 
-## 10. Future Enhancements
+## 9. Limitations & Future Roadmap
 
-1.  **Database Integration:** Connect to PostgreSQL or MongoDB to persist records permanently.
-2.  **Auth.js (NextAuth):** Implement secure GitHub/Google login to identify actual users.
-3.  **Search & Filtering:** Add client-side search to filter intern activities by date or name.
-4.  **Analytics:** Add a chart view for admins to visualize "Total Hours Worked" per week.
+**Current Limitations:**
+*   **Authentication:** The system currently simulates user identity via simple role selection or direct URL access. There is no password-based login or session management.
+*   **Date Handling:** Dates are currently stored as Strings for simplicity, which may limit advanced time-zone based queries.
 
----
-
-## 11. Conclusion
-
-**Intern Track** successfully demonstrates a modern, efficient approach to building internal tools with Next.js. By leveraging Server Side Rendering and API Routes, it bundles a complete full-stack application into a single deployable unit. The aggressive styling optimization ensures the code remains clean and maintainable, serving as an excellent reference for how to build professional administrative dashboards with minimal overhead.
+**Future Enhancements:**
+1.  **NextAuth Integration:** Implement secure login (GitHub/Google) to replace the current simulation.
+2.  **Date/Time Objects:** Migrate date fields to native `DateTime` types in Prisma for better analytics.
+3.  **Data Visualization:** Add charts to the Admin Dashboard to visualize hours worked over time.
+4.  **Profile Management:** Allow interns to update their own profile details.
